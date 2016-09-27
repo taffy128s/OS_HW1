@@ -52,8 +52,8 @@ void
 ExceptionHandler(ExceptionType which)
 {
     int type = kernel->machine->ReadRegister(2);
-	int val;
-    int status, exit, threadID, programID;
+	int val, size, byteNum;
+    int status, exit, threadID, programID, openfileID;
 	DEBUG(dbgSys, "Received Exception " << which << " type: " << type << "\n");
     switch (which) {
     case SyscallException:
@@ -66,13 +66,66 @@ ExceptionHandler(ExceptionType which)
 			break;
         case SC_PrintInt:
             DEBUG(dbgSys, "---PrintInt---\n");
-            cout << "Number to print is " << kernel->machine->ReadRegister(4) << ".\n";
             SysPrintInt(kernel->machine->ReadRegister(4));
+            cout << endl;
             kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
 			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
             return;
             ASSERTNOTREACHED();
+            break;
+        case SC_Open:
+            val = kernel->machine->ReadRegister(4);
+            {
+            char *filename = &(kernel->machine->mainMemory[val]);
+            openfileID = SysOpen(filename);
+            }
+            kernel->machine->WriteRegister(2, (int) openfileID);
+            kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+            return;
+            ASSERTNOTREACHED();
+            break;
+        case SC_Read:
+            val = kernel->machine->ReadRegister(4);
+            size = kernel->machine->ReadRegister(5);
+            openfileID = kernel->machine->ReadRegister(6);
+            {
+            char *msg = &(kernel->machine->mainMemory[val]);
+            byteNum = SysRead(msg, size, openfileID);
+            kernel->machine->WriteRegister(2, (int) byteNum);
+            }
+            kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+			return;
+			ASSERTNOTREACHED();
+            break;
+        case SC_Write:
+            val = kernel->machine->ReadRegister(4);
+            size = kernel->machine->ReadRegister(5);
+            openfileID = kernel->machine->ReadRegister(6);
+            {
+            char *msg = &(kernel->machine->mainMemory[val]);
+            byteNum = SysWrite(msg, size, openfileID);
+            kernel->machine->WriteRegister(2, (int) byteNum);
+            }
+            kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+			return;
+			ASSERTNOTREACHED();
+            break;
+        case SC_Close:
+            openfileID = kernel->machine->ReadRegister(4);
+            status = SysClose(openfileID);
+            kernel->machine->WriteRegister(2, (int) status);
+            kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+			return;
+			ASSERTNOTREACHED(); 
             break;
 		case SC_MSG:
 			DEBUG(dbgSys, "Message received.\n");

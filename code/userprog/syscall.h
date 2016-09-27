@@ -150,7 +150,7 @@ int Seek(int position, OpenFileId id);
 /* Close the file, we're done reading and writing to it.
  * Return 1 on success, negative error code on failure
  */
-int Close(OpenFileId id);
+int Close(OpenFileId id); 
 
 
 /* User-level thread operations: Fork and Yield.  To allow multiple

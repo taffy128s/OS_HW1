@@ -45,6 +45,10 @@ class Kernel {
 	Thread* getThread(int threadID){return t[threadID];}    
 	
 	int CreateFile(char* filename); // fileSystem call
+    int Open(char *name);
+    int Write(char *buffer, int size, int id);
+    int Read(char *buffer, int size, int id);
+    int Close(int id);
     void PrintInt(int number);
 
 // These are public for notational convenience; really, 

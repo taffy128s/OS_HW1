@@ -310,6 +310,22 @@ int Kernel::CreateFile(char *filename)
 	return fileSystem->Create(filename);
 }
 
+int Kernel::Open(char *name) {
+    return fileSystem->myOpen(name);
+}
+
+int Kernel::Write(char *buffer, int size, int id) {
+    return fileSystem->Write(buffer, size, id);
+}
+
+int Kernel::Read(char *buffer, int size, int id) {
+    return fileSystem->Read(buffer, size, id);
+}
+
+int Kernel::Close(int id) {
+    return fileSystem->myClose(id);
+}
+
 void Kernel::PrintInt(int number) {
     std::stack<char> stk;
     while (number > 0) {
@@ -320,5 +336,4 @@ void Kernel::PrintInt(int number) {
         synchConsoleOut->PutChar(stk.top());
         stk.pop();
     }
-    synchConsoleOut->PutChar('\n');
 }

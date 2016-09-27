@@ -95,6 +95,15 @@ class Interrupt {
     void Halt(); 		// quit and print out stats
 
     void PrintInt(int number);
+    
+    int Open(char *name);
+    
+    int Write(char *buffer, int size, int id);
+    
+    int Read(char *buffer, int size, int id);
+    
+    int Close(int id);
+    
 	int CreateFile(char *filename);
  
     void YieldOnReturn();	// cause a context switch on return 
