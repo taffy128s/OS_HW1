@@ -36,6 +36,7 @@
 #define SC_ThreadJoin   15
 #define SC_Add		42
 #define SC_MSG		100
+#define SC_PrintInt 99
 
 #ifndef IN_ASM
 
@@ -57,6 +58,9 @@ void Halt();
  */ 
 
 int Add(int op1, int op2);
+
+void PrintInt(int number);
+
 /*
  * Just for simply showing message, not a safe way for console IO
  */

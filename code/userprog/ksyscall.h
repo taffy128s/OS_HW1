@@ -26,6 +26,10 @@ int SysAdd(int op1, int op2)
   return op1 + op2;
 }
 
+void SysPrintInt(int number) {
+    kernel->interrupt->PrintInt(number);
+}
+
 int SysCreate(char *filename)
 {
 	// return value
