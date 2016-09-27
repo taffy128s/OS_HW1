@@ -74,6 +74,7 @@ class FileSystem {
     }
     
     int myClose(int id) {
+        free(fileDescriptorTable[id]);
         return (Close(id) == 0) ? 1 : 0;
     }
 
