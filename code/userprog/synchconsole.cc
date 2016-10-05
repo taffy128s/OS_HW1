@@ -106,6 +106,13 @@ SynchConsoleOutput::PutChar(char ch)
     lock->Release();
 }
 
+void SynchConsoleOutput::PrintInt(int number) {
+    lock->Acquire();
+    consoleOutput->PrintInt(number);
+    waitFor->P();
+    lock->Release();
+}
+
 //----------------------------------------------------------------------
 // SynchConsoleOutput::CallBack
 //      Interrupt handler called when it's safe to send the next 

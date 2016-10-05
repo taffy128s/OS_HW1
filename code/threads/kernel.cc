@@ -17,8 +17,6 @@
 #include "synchdisk.h"
 #include "post.h"
 #include "synchconsole.h"
-#include <stack>
-#include <iostream>
 
 //----------------------------------------------------------------------
 // Kernel::Kernel
@@ -327,13 +325,5 @@ int Kernel::Close(int id) {
 }
 
 void Kernel::PrintInt(int number) {
-    std::stack<char> stk;
-    while (number > 0) {
-        stk.push(number % 10 + '0');
-        number /= 10;
-    }
-    while (!stk.empty()) {
-        synchConsoleOut->PutChar(stk.top());
-        stk.pop();
-    }
+    synchConsoleOut->PrintInt(number);
 }

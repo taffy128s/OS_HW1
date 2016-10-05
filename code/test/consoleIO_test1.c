@@ -4,9 +4,11 @@ int
 main()
 {
 	int n;
-	for (n=9;n>5;n--) {
+	for (n=111;n>=-2;n--) {
 		PrintInt(n);
 	}
-        Halt();
+    PrintInt(1 << 31);
+    PrintInt(-((1 << 31) + 1));
+    Halt();
 }
 

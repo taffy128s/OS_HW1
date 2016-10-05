@@ -16,6 +16,7 @@
 #include "console.h"
 #include "main.h"
 #include "stdio.h"
+#define BUFFSIZE 16
 //----------------------------------------------------------------------
 // ConsoleInput::ConsoleInput
 // 	Initialize the simulation of the input for a hardware console device.
@@ -172,3 +173,30 @@ ConsoleOutput::PutChar(char ch)
     kernel->interrupt->Schedule(this, ConsoleTime, ConsoleWriteInt);
 }
 
+void ConsoleOutput::PrintInt(int number) {
+    ASSERT(putBusy == FALSE);
+    char temp[BUFFSIZE], idx = BUFFSIZE - 1;
+    bool isNegative = false;
+    temp[idx--] = '\n';
+    if (number == 0) temp[idx--] = '0';
+    else {
+        if (number < 0) {
+            if (number == (1 << 31)) {
+                temp[idx--] = '8';
+                number = -(number / 10);
+                isNegative = true;
+            } else {
+                number = -number;
+                isNegative = true;
+            }
+        }
+        while (number > 0) {
+            temp[idx--] = number % 10 + '0';
+            number /= 10;
+        }
+        if (isNegative) temp[idx--] = '-';
+    }
+    WriteFile(writeFileNo, temp + idx + 1, BUFFSIZE - idx - 1);
+    putBusy = TRUE;
+    kernel->interrupt->Schedule(this, ConsoleTime, ConsoleWriteInt);
+}

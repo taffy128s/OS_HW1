@@ -67,7 +67,6 @@ ExceptionHandler(ExceptionType which)
         case SC_PrintInt:
             DEBUG(dbgSys, "---PrintInt---\n");
             SysPrintInt(kernel->machine->ReadRegister(4));
-            cout << endl;
             kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
 			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
